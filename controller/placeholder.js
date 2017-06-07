@@ -51,7 +51,7 @@ module.exports = function($) {
 					self._load[text] = true;
 					return (self._image(size));
 				}).then(function() {
-					return (self.file({contentDisposition: 'inline', path: $.file.secure(path)}));
+					return (self.file({contentDisposition: 'inline', path: $.path(path)}));
 				}));
 			}
 		});
