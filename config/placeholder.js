@@ -1,8 +1,7 @@
 "use strict";
 
-module.exports = function(r, i) {
-	return ({
-		route: [
+module.exports = function(r) {
+	return ([
 			r.create().set({
 				method: ['get'],
 				path: '/placeholder/:format',
@@ -14,7 +13,5 @@ module.exports = function(r, i) {
 					method: 'get'
 				}
 			})
-		],
-		import: []
-	});
+		]);
 };

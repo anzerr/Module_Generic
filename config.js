@@ -1,6 +1,6 @@
 "use strict";
 
-module.exports = function(r, i) {
+module.exports = function() {
 	return ({
 		dependencies: {
 			'jimp': '^0.2.27',
