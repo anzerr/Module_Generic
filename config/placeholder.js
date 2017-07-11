@@ -1,17 +1,17 @@
 "use strict";
 
-module.exports = function(r) {
+module.exports = function() {
 	return ([
-			r.create().set({
-				method: ['get'],
-				path: '/placeholder/:format',
-				param: {
-					format: '.*'
-				},
-				action: {
-					controller: 'placeholder',
-					method: 'get'
-				}
-			})
-		]);
+		{
+			method: ['get'],
+			path: '/placeholder/:format',
+			param: {
+				format: '.*'
+			},
+			action: {
+				controller: 'placeholder',
+				method: 'get'
+			}
+		}
+	]);
 };

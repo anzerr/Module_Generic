@@ -69,7 +69,10 @@ jspm_packages
 *.stdout
 
 # app files
+.idea/
+.idea
 /.idea/*
+.idea/*
 
 resources/
 resources/*
