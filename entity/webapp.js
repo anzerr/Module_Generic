@@ -17,6 +17,7 @@ module.exports = function($) {
 					'<html>',
 					'<head>',
 					'<meta charset="utf-8">',
+					'<link rel="icon" type="image/png" href="/favicon.png"/>',
 					'<style>',
 					'body, html {margin:0;padding:0;width:100%;height:100%;}',
 					'#canvasLoader {top:0;left:0;width:100%;height:100%;position:absolute;pointer-events:none;z-index:99;}',

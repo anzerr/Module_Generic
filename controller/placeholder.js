@@ -10,8 +10,7 @@ module.exports = function($) {
 		var obj = function() {};
 		obj.prototype = $.extends('!controller', {
 			get: function(data) {
-				var self = this, s = data.body.format.split('x'), size = {x: Number(s[0] || '100'), y: Number(s[1] || '100')};
-
+				const self = this;
 				return (placeholder.get(data.body.format || '').then(function(path) {
 					return (self.file({contentDisposition: 'inline', path: $.path(path)}));
 				}, function() {

@@ -23,7 +23,7 @@ module.exports = function($) {
 						var text = size.x + 'x' + size.y;
 						image.print(font, (size.x / 2) - (text.length * 4.5), (size.y / 2) - 8, text);
 						image.rgba(true);
-						image.write($.path('cache!placeholder/' + text + '.png'), function() {
+						image.write($.path('cache!placeholder/' + key + '.png'), function() {
 							p.resolve();
 							self._event.emit(key);
 						});
