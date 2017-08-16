@@ -89,12 +89,12 @@ module.exports = function($) {
 					return ($.file.read(path));
 				}).then(function(res) {
 					var out = $.schema.copy(self._index.content);
-					out.splice(9, 0, '<script type="text/javascript">' + res + '</script>');
+					out.splice(10, 0, '<script type="text/javascript">' + res + '</script>');
 					if (data.header) {
-						out.splice(4, 0, ($.is.array(data.header))? data.header.join('') : data.header);
+						out.splice(5, 0, ($.is.array(data.header))? data.header.join('') : data.header);
 					}
 					if (data.main) {
-						out.splice(13, 0, '<script type="text/javascript" src="' + data.main + '"></script>');
+						out.splice(14, 0, '<script type="text/javascript" src="' + data.main + '"></script>');
 					}
 
 					return ($.file.write(path, out.join('')));
