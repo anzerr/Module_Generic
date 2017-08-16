@@ -125,6 +125,17 @@ module.exports = function($) {
             },
 
             /**
+             * Set raw data to be sent
+             *
+             * @param data
+             * @returns {obj}
+             */
+            data: function(data) {
+                this._config.data = data;
+                return (this);
+            },
+			
+            /**
              * Set internal option for the class
              *
              * @param data
