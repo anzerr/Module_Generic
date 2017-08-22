@@ -84,9 +84,12 @@ module.exports = function($) {
 					return (this.file({contentDisposition: 'inline', path: path}));
 				}
 
-				var self = this;
-				return (minify.js([$.path('module!public/loader.js')]).then(function(path) {
+				var self = this, p = $.promise();
+				minify.js([$.path('module!public/loader.js')]).then(function(path) {
 					return ($.file.read(path));
+				}, function(err) {
+					console.log('failed to minify', err);
+					return (self.res().status(500).data({error: 'M203'}));
 				}).then(function(res) {
 					var out = $.schema.copy(self._index.content);
 					out.splice(10, 0, '<script type="text/javascript">' + res + '</script>');
@@ -100,8 +103,12 @@ module.exports = function($) {
 					return ($.file.write(path, out.join('')));
 				}).then(function() {
 					self._index.cache[key] = true;
-					return (self.file({contentDisposition: 'inline', path: path}));
-				}));
+					p.resolve(self.file({contentDisposition: 'inline', path: path}));
+				}, function() {
+					p.resolve(self.res().status(500).data({error: 'M204'}));
+				})
+
+				return (p);
 			},
 
 			minify: function(path, raw) {

@@ -37,9 +37,9 @@ module.exports = function($) {
 				}).then(function() {
 					self._hash[key] = true;
 					p.resolve($.path('cache!tmp/' + ((raw)? '' : 'minify_') + key + '.js'));
-				}, function() {
+				}, function(err) {
 					self._hash[key] = false;
-					p.reject();
+					p.reject(err);
 				});
 
 				return (p);
