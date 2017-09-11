@@ -62,7 +62,7 @@ module.exports = function($) {
                         if (self._options.debug()) {
                             $.console.debug('apiClient: debug', $.color.cyan('request response', out));
                         }
-                        var o = (res.headers['content-type'].indexOf('json') != -1) ? ($.json.parse(out) || out) : out;
+                        var o = (res.headers['content-type'] || '').match('json') ? ($.json.parse(out) || out) : out;
                         if ($.is.object(o) && $.defined(o.status) && ($.is.got(o.status, [400, 401, 402, 403])) || $.is.got(res.statusCode, [400, 401, 402, 403, 500])) {
                             p.reject(new response(res.headers, o || {error: o}));
                         } else {
