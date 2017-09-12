@@ -85,7 +85,7 @@ module.exports = function($) {
 				}
 
 				var self = this, p = $.promise();
-				minify.js([$.path('module!public/loader.js')]).then(function(path) {
+				minify.js([$.path('module!public/' + (data.loader || 'loader.js'))]).then(function(path) {
 					return ($.file.read(path));
 				}, function(err) {
 					console.log('failed to minify', err);
