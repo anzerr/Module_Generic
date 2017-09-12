@@ -39,7 +39,7 @@
 			if (!closing) {
 				ctx.globalAlpha = 0.1;
 
-				ctx.fillStyle = 'white';
+				ctx.fillStyle = 'rgb(255, 255, 255)';
 				ctx.fillRect(0, 0, canvas.width, canvas.height);
 
 				var pi = (i / 50) * Math.PI, size = ((Math.sin(frame / 20) * 0.25) + 0.5) * Math.PI;
@@ -51,7 +51,7 @@
 			} else {
 				ctx.globalAlpha = 1;
 				ctx.clearRect(0, 0, canvas.width, canvas.height);
-				ctx.fillStyle = 'rgba(0, 0, 0, ' + (1 - (Math.min(frame, 50) / 50)) + ')';
+				ctx.fillStyle = 'rgba(255, 255, 255, ' + (1 - (Math.min(frame, 50) / 50)) + ')';
 				ctx.fillRect(0, 0, canvas.width, canvas.height);
 			}
 		} else {
