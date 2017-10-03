@@ -55,7 +55,9 @@ module.exports = function($) {
 
                 var self = this, p = new $.promise(), req = ((this._config.https) ? https : http).request(this._query, function(res) {
                     var out = (self._options.get('buffer')) ? Buffer.from('') : '';
-                    res.setEncoding('utf8');
+                    if (!self._options.get('buffer')) {
+                        res.setEncoding('utf8');
+                    }
                     res.on('data', function(chunk) {
                         if (self._options.get('buffer')) {
                             out = Buffer.concat([out, chunk]);
