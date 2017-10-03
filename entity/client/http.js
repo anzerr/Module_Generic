@@ -66,7 +66,7 @@ module.exports = function($) {
                         if (self._options.debug()) {
                             $.console.debug('apiClient: debug', $.color.cyan('request response', out));
                         }
-                        
+
                         var o = null;
                         if (self._options.get('buffer')) {
                             o = out;
@@ -74,7 +74,8 @@ module.exports = function($) {
                             o = (res.headers['content-type'] || '').match('json') ? ($.json.parse(out) || out) : out;
                         }
 
-                        if ($.is.object(o) && $.defined(o.status) && ($.is.got(o.status, [400, 401, 402, 403])) || $.is.got(res.statusCode, [400, 401, 402, 403, 500])) {
+                        var status = Math.floor(o.status || res.statusCode) / 100;
+                        if ($.is.object(o) && $.defined(o.status) && (status == 4 || status == 5)) {
                             p.reject(new response(res.headers, o || {error: o}));
                         } else {
                             p.resolve(new response(res, o));
