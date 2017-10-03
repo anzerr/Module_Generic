@@ -17,6 +17,31 @@ module.exports = function($) {
             },
 
             /**
+             * Get the given key value
+             *
+             * @param key
+             * @returns {*}
+             */
+            get: function(key) {
+                if ($.defined(this._data[key])) {
+                    return this._data[key];
+                } else {
+                    return null;
+                }
+            },
+            /**
+             * Set the given key value
+             *
+             * @param key
+             * @param value
+             * @returns {*}
+             */
+            set: function(key, value) {
+                this._data[key] = value;
+                return (this);
+            }
+
+            /**
              * Set or get the debug value
              *
              * @param value
