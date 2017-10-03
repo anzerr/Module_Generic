@@ -35,7 +35,7 @@ module.exports = function($) {
              * @returns {*}
              */
             body: function(key) {
-                if ($.defined(key)) {
+                if ($.defined(key) && $.is.object(this._body)) {
                     return (this._body[key]);
                 }
                 return (this._body);
