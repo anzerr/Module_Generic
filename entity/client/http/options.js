@@ -39,7 +39,7 @@ module.exports = function($) {
             set: function(key, value) {
                 this._data[key] = value;
                 return (this);
-            }
+            },
 
             /**
              * Set or get the debug value
