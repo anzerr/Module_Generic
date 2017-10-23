@@ -2,9 +2,9 @@
 
 module.exports = function($) {
 	return $.require([
-		//
+		'base!controller/response.js'
 	], function(
-		//
+		response
 	) {
 
 		var obj = function() {
@@ -27,6 +27,9 @@ module.exports = function($) {
 				}
 			},
 			code: function(code) {
+				if ($.is.instance(code, response)) {
+					return (code);
+				}
 				var ref = this._ref[code] || this._ref.default;
 				return (this.res().status(ref.code).data(ref.name || code))
 			}

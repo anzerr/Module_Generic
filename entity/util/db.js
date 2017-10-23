@@ -12,7 +12,7 @@ module.exports = function($) {
             this._debug = config.debug || false; // use to show the reject?
             this._service = config.service;
             if (!$.defined(this._service)) {
-                throw new Error('missing mongodb service to run on');
+                //throw new Error('missing mongodb service to run on');
             }
         };
         obj.prototype = {
