@@ -54,16 +54,30 @@ module.exports = function($) {
                 }
 
                 var self = this, p = new $.promise(), req = ((this._config.https) ? https : http).request(this._query, function(res) {
-                    var out = '';
-                    res.setEncoding('utf8');
+                    var out = (self._options.get('buffer')) ? Buffer.from('') : '';
+                    if (!self._options.get('buffer')) {
+                        res.setEncoding('utf8');
+                    }
                     res.on('data', function(chunk) {
-                        out += chunk;
+                        if (self._options.get('buffer')) {
+                            out = Buffer.concat([out, chunk]);
+                        } else {
+                            out += chunk;
+                        }
                     }).on('end', function() {
                         if (self._options.debug()) {
                             $.console.debug('apiClient: debug', $.color.cyan('request response', out));
                         }
-                        var o = (res.headers['content-type'] || '').match('json') ? ($.json.parse(out) || out) : out;
-                        if ($.is.object(o) && $.defined(o.status) && ($.is.got(o.status, [400, 401, 402, 403])) || $.is.got(res.statusCode, [400, 401, 402, 403, 500])) {
+
+                        var o = null;
+                        if (self._options.get('buffer')) {
+                            o = out;
+                        } else {
+                            o = (res.headers['content-type'] || '').match('json') ? ($.json.parse(out) || out) : out;
+                        }
+
+                        var status = Math.floor(o.status || res.statusCode) / 100;
+                        if ($.is.object(o) && $.defined(o.status) && (status == 4 || status == 5)) {
                             p.reject(new response(res.headers, o || {error: o}));
                         } else {
                             p.resolve(new response(res, o));
