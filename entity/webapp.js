@@ -77,7 +77,7 @@ module.exports = function($) {
 						'}',
 						'#loader {',
 							'position: absolute;',
-							'z-index: 999',
+							'z-index: 999;',
 							'top: 0px;',
 							'left: 0px;',
 							'width: 100%;',
