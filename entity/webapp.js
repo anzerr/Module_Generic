@@ -20,12 +20,77 @@ module.exports = function($) {
 					'<link rel="icon" type="image/png" href="/favicon.png"/>',
 					'<style>',
 					'body, html {margin:0;padding:0;width:100%;height:100%;}',
-					'#canvasLoader {top:0;left:0;width:100%;height:100%;position:absolute;pointer-events:none;z-index:99;}',
-					'#container {position:absolute;width:100%;height:100%;}',
+					[ // loader
+						'.spinner {',
+							'margin: 0px auto;',
+							'width: 50px;',
+							'height: 40px;',
+							'text-align: center;',
+							'font-size: 10px;',
+						'}',
+						'',
+						'.spinner > div {',
+							'background-color: #333;',
+							'height: 100%;',
+							'width: 6px;',
+							'display: inline-block;',
+							'margin: 1px',
+							'',
+							'-webkit-animation: sk-stretchdelay 1.2s infinite ease-in-out;',
+							'animation: sk-stretchdelay 1.2s infinite ease-in-out;',
+						'}',
+						'',
+						'.spinner .rect2 {',
+							'-webkit-animation-delay: -1.1s;',
+							'animation-delay: -1.1s;',
+						'}',
+						'',
+						'.spinner .rect3 {',
+							'-webkit-animation-delay: -1.0s;',
+							'animation-delay: -1.0s;',
+						'}',
+						'',
+						'.spinner .rect4 {',
+							'-webkit-animation-delay: -0.9s;',
+							'animation-delay: -0.9s;',
+						'}',
+						'',
+						'.spinner .rect5 {',
+							'-webkit-animation-delay: -0.8s;',
+							'animation-delay: -0.8s;',
+						'}',
+						'',
+						'@-webkit-keyframes sk-stretchdelay {',
+							'0%, 40%, 100% { -webkit-transform: scaleY(0.4) }',
+							'20% { -webkit-transform: scaleY(1.0) }',
+						'}',
+						'',
+						'@keyframes sk-stretchdelay {',
+							'0%, 40%, 100% {',
+								'transform: scaleY(0.4);',
+								'-webkit-transform: scaleY(0.4);',
+							'}  20% {',
+								'transform: scaleY(1.0);',
+								'-webkit-transform: scaleY(1.0);',
+							'}',
+						'}'
+					].join(' '),
 					'</style>',
 					'</head>',
 					'<body>',
-					'<canvas id="canvasLoader"></canvas>',
+					[
+						'<div style="width:100%;height:100%;background:white;-webkit-transition: all 2000ms ease;transition: all 2000ms ease;" id="loader">',
+							'<div style="height:calc(50% - 20px);">',
+							'</div>',
+							'<div class="spinner">',
+								'<div class="rect1"></div>',
+								'<div class="rect2"></div>',
+								'<div class="rect3"></div>',
+								'<div class="rect4"></div>',
+								'<div class="rect5"></div>',
+							'</div>',
+						'</div>'
+					].join(''),
 					'<div id="container"></div>',
 					'</body>',
 					'</html>'
@@ -85,23 +150,18 @@ module.exports = function($) {
 				}
 
 				var self = this, p = $.promise();
-				minify.js([$.path('module!public/' + (data.loader || 'loader.js'))]).then(function(path) {
-					return ($.file.read(path));
-				}, function(err) {
-					console.log('failed to minify', err);
-					return (self.res().status(500).data({error: 'M203'}));
-				}).then(function(res) {
-					var out = $.schema.copy(self._index.content);
-					out.splice(10, 0, '<script type="text/javascript">' + res + '</script>');
-					if (data.header) {
-						out.splice(5, 0, ($.is.array(data.header))? data.header.join('') : data.header);
-					}
-					if (data.main) {
-						out.splice(14, 0, '<script type="text/javascript" src="' + data.main + '"></script>');
-					}
 
-					return ($.file.write(path, out.join('')));
-				}).then(function() {
+				var out = $.schema.copy(self._index.content);
+
+				if (data.header) {
+					out.splice(5, 0, ($.is.array(data.header))? data.header.join('') : data.header);
+				}
+
+				if (data.main) {
+					out.splice(14, 0, '<script type="text/javascript" src="' + data.main + '"></script>');
+				}
+
+				$.file.write(path, out.join('')).then(function() {
 					self._index.cache[key] = true;
 					p.resolve(self.file({contentDisposition: 'inline', path: path}));
 				}, function() {
