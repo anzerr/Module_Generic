@@ -53,11 +53,13 @@ module.exports = function($) {
                     $.console.debug('apiClient: debug', $.color.cyan(this._query, '\n', this._config.data));
                 }
 
+                var done = false;
                 var self = this, p = new $.promise(), req = ((this._config.https) ? https : http).request(this._query, function(res) {
                     var out = (self._options.get('buffer')) ? Buffer.from('') : '';
                     if (!self._options.get('buffer')) {
                         res.setEncoding('utf8');
                     }
+
                     res.on('data', function(chunk) {
                         if (self._options.get('buffer')) {
                             out = Buffer.concat([out, chunk]);
@@ -76,21 +78,38 @@ module.exports = function($) {
                             o = (res.headers['content-type'] || '').match('json') ? ($.json.parse(out) || out) : out;
                         }
 
-                        var status = Math.floor(o.status || res.statusCode) / 100;
-                        if ($.is.object(o) && $.defined(o.status) && (status == 4 || status == 5)) {
-                            p.reject(new response(res.headers, o || {error: o}));
-                        } else {
-                            p.resolve(new response(res, o));
+                        if (!done) {
+                            var status = Math.floor(o.status || res.statusCode) / 100;
+                            if ($.is.object(o) && $.defined(o.status) && (status == 4 || status == 5)) {
+                                p.reject(new response(res.headers, o || {error: o}));
+                            } else {
+                                p.resolve(new response(res, o));
+                            }
+                            done = true;
                         }
                     }).on('error', function(err) {
                         if (self._options.debug()) {
                             $.console.debug('apiClient: debug', $.color.red('error', err, out));
                         }
-                        p.reject(new response(res, err));
+                        if (!done) {
+                            p.reject(new response(res, err));
+                            done = true;
+                        }
                     });
                 });
+                if (self._options.get('timeout')) {
+                    req.on('socket', function (socket) {
+                        socket.setTimeout(self._options.get('timeout'));
+                        socket.on('timeout', function() {
+                            req.abort();
+                        });
+                    });
+                }
                 req.on('error', function(err) {
-                    p.reject(new response({}, err));
+                    if (!done) {
+                        p.reject(new response({}, err));
+                        done = true;
+                    }
                 });
                 req.write(this._config.data);
                 req.end();
@@ -148,7 +167,7 @@ module.exports = function($) {
                 this._config.data = data;
                 return (this);
             },
-			
+
             /**
              * Set internal option for the class
              *
