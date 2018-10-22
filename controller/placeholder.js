@@ -12,7 +12,13 @@ module.exports = function($) {
 			get: function(data) {
 				const self = this;
 				return (placeholder.get(data.body.format || '').then(function(path) {
-					return (self.file({contentDisposition: 'inline', path: $.path(path)}));
+					return (self.file({
+						header: {
+							'Cache-Control': 'public, max-age=31536000'
+						},
+						contentDisposition: 'inline',
+						path: $.path(path)
+					}));
 				}, function() {
 					return (self.res().status(404).data({error: 'error creating placeholder image'}));
 				}));

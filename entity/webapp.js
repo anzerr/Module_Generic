@@ -158,7 +158,13 @@ module.exports = function($) {
 			main: function(data) {
 				var key = $.crypto.hash($.json.encode(data)), path = $.path('cache!index/' + key + '.html');
 				if (this._index.cache[key]) {
-					return (this.file({contentDisposition: 'inline', path: path}));
+					return (this.file({
+						header: {
+							'Cache-Control': 'public, max-age=31536000'
+						},
+						contentDisposition: 'inline',
+						path: path
+					}));
 				}
 
 				var self = this, p = $.promise();
@@ -175,7 +181,13 @@ module.exports = function($) {
 
 				$.file.write(path, out.join('')).then(function() {
 					self._index.cache[key] = true;
-					p.resolve(self.file({contentDisposition: 'inline', path: path}));
+					p.resolve(self.file({
+						header: {
+							'Cache-Control': 'public, max-age=31536000'
+						},
+						contentDisposition: 'inline',
+						path: path
+					}));
 				}, function() {
 					p.resolve(self.res().status(500).data({error: 'M204'}));
 				})
@@ -202,7 +214,13 @@ module.exports = function($) {
 					return (null);
 				}).then(function(res) {
 					if (res) {
-						return (self.file({contentDisposition: 'inline', path: res}));
+						return (self.file({
+							header: {
+								'Cache-Control': 'public, max-age=31536000'
+							},
+							contentDisposition: 'inline', 
+							path: res
+						}));
 					}
 					return (self.res().status(404).data({error: 'M101'}));
 				}, function(res) {
